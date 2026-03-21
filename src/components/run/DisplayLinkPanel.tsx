@@ -1,7 +1,10 @@
 import { CopyButton } from "@/components/shared/CopyButton";
 
 export function DisplayLinkPanel({ token }: { token: string | null }) {
-  const displayUrl = token ? `/display/${token}` : null;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "";
+  const displayUrl = token
+    ? `${baseUrl || "http://localhost:3000"}/display/${token}`
+    : null;
 
   return (
     <div className="space-y-2 text-right">

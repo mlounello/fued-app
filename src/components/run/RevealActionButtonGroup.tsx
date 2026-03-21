@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { revealAnswer } from "@/actions/sessions";
@@ -11,11 +12,13 @@ export function RevealActionButtonGroup({
   sessionId: string;
   answerId: string;
 }) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const reveal = (target: "team_1" | "team_2" | "none") => {
     startTransition(async () => {
       await revealAnswer(sessionId, answerId, target);
+      router.refresh();
     });
   };
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Fued App",
+  title: "Feud App",
   description: "Operator and live display tooling for Family Feud-style games.",
 };
 
@@ -20,7 +20,7 @@ export default function RootLayout({
           <header className="border-b border-[color:var(--border)] bg-black/5">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
               <Link href="/" className="text-xl font-bold tracking-wide">
-                Fued
+                Feud
               </Link>
               <nav className="flex items-center gap-4 text-sm">
                 <Link href="/dashboard">Dashboard</Link>
