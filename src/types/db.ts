@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 
 export interface Database {
-  app_public: {
+  fued_public: {
     Tables: Record<string, unknown>;
     Views: Record<string, never>;
     Functions: Record<string, unknown>;

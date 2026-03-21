@@ -1,10 +1,10 @@
 begin;
 
-create table if not exists app_public.games (
+create table if not exists fued_public.games (
   id uuid primary key default gen_random_uuid(),
-  owner_user_id uuid not null references app_public.profiles(id) on delete restrict,
+  owner_user_id uuid not null references fued_public.profiles(id) on delete restrict,
   title text not null default 'Untitled Game',
-  status app_public.game_status not null default 'draft',
+  status fued_public.game_status not null default 'draft',
   show_team_names boolean not null default true,
   show_scores boolean not null default true,
   team_1_name text not null default 'Team 1',
@@ -30,9 +30,9 @@ create table if not exists app_public.games (
   constraint games_body_font_allowed check (body_font in ('Merriweather'))
 );
 
-create table if not exists app_public.game_boards (
+create table if not exists fued_public.game_boards (
   id uuid primary key default gen_random_uuid(),
-  game_id uuid not null references app_public.games(id) on delete cascade,
+  game_id uuid not null references fued_public.games(id) on delete cascade,
   question_text text not null,
   sort_order integer not null,
   created_at timestamptz not null default now(),
@@ -42,9 +42,9 @@ create table if not exists app_public.game_boards (
   constraint game_boards_sort_order_positive check (sort_order > 0)
 );
 
-create table if not exists app_public.board_answers (
+create table if not exists fued_public.board_answers (
   id uuid primary key default gen_random_uuid(),
-  board_id uuid not null references app_public.game_boards(id) on delete cascade,
+  board_id uuid not null references fued_public.game_boards(id) on delete cascade,
   answer_text text not null,
   point_value integer not null,
   display_position integer not null,
@@ -59,42 +59,42 @@ create table if not exists app_public.board_answers (
 );
 
 create index if not exists idx_games_owner_user_id
-  on app_public.games (owner_user_id);
+  on fued_public.games (owner_user_id);
 
 create index if not exists idx_games_deleted_at
-  on app_public.games (deleted_at);
+  on fued_public.games (deleted_at);
 
 create index if not exists idx_games_owner_updated_at
-  on app_public.games (owner_user_id, updated_at desc);
+  on fued_public.games (owner_user_id, updated_at desc);
 
 create index if not exists idx_game_boards_game_id
-  on app_public.game_boards (game_id);
+  on fued_public.game_boards (game_id);
 
 create index if not exists idx_game_boards_game_sort_order
-  on app_public.game_boards (game_id, sort_order);
+  on fued_public.game_boards (game_id, sort_order);
 
 create index if not exists idx_board_answers_board_id
-  on app_public.board_answers (board_id);
+  on fued_public.board_answers (board_id);
 
 create index if not exists idx_board_answers_board_display_position
-  on app_public.board_answers (board_id, display_position);
+  on fued_public.board_answers (board_id, display_position);
 
-drop trigger if exists trg_games_set_updated_at on app_public.games;
+drop trigger if exists trg_games_set_updated_at on fued_public.games;
 create trigger trg_games_set_updated_at
-before update on app_public.games
+before update on fued_public.games
 for each row
-execute function app_private.set_updated_at();
+execute function fued_private.set_updated_at();
 
-drop trigger if exists trg_game_boards_set_updated_at on app_public.game_boards;
+drop trigger if exists trg_game_boards_set_updated_at on fued_public.game_boards;
 create trigger trg_game_boards_set_updated_at
-before update on app_public.game_boards
+before update on fued_public.game_boards
 for each row
-execute function app_private.set_updated_at();
+execute function fued_private.set_updated_at();
 
-drop trigger if exists trg_board_answers_set_updated_at on app_public.board_answers;
+drop trigger if exists trg_board_answers_set_updated_at on fued_public.board_answers;
 create trigger trg_board_answers_set_updated_at
-before update on app_public.board_answers
+before update on fued_public.board_answers
 for each row
-execute function app_private.set_updated_at();
+execute function fued_private.set_updated_at();
 
 commit;

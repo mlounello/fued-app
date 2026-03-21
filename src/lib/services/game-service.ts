@@ -8,7 +8,7 @@ export async function getGameEditorData(gameId: string): Promise<{
   const supabase = await createClient();
 
   const { data: game, error: gameError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("games")
     .select("*")
     .eq("id", gameId)
@@ -19,7 +19,7 @@ export async function getGameEditorData(gameId: string): Promise<{
   }
 
   const { data: boards, error: boardsError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("game_boards")
     .select(`
       id,
@@ -32,7 +32,8 @@ export async function getGameEditorData(gameId: string): Promise<{
         answer_text,
         point_value,
         display_position,
-        sort_order
+        sort_order,
+        deleted_at
       )
     `)
     .eq("game_id", gameId)
@@ -76,6 +77,7 @@ export async function getGameEditorData(gameId: string): Promise<{
       questionText: board.question_text,
       sortOrder: board.sort_order,
       answers: (board.board_answers ?? [])
+        .filter((answer: any) => !answer.deleted_at)
         .sort((left: any, right: any) => left.display_position - right.display_position)
         .map((answer: any) => ({
           id: answer.id,

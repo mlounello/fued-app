@@ -7,7 +7,7 @@ export async function ensureProfile(params: {
 }) {
   const supabase = await createClient();
 
-  const { error } = await supabase.schema("app_public").from("profiles").upsert(
+  const { error } = await supabase.schema("fued_public").from("profiles").upsert(
     {
       id: params.userId,
       email: params.email,

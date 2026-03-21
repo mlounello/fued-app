@@ -1,5 +1,6 @@
 "use server";
 
+import { requireActiveProfile } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { validateAssetFile } from "@/lib/validators/assets";
 
@@ -9,14 +10,35 @@ export async function uploadGameAsset(params: {
   file: File;
   ownerUserId: string;
 }) {
+  const { user } = await requireActiveProfile();
+
+  if (params.ownerUserId !== user.id) {
+    throw new Error("Invalid asset owner.");
+  }
+
   validateAssetFile(params.file);
 
   const supabase = await createClient();
+  const { data: game, error: gameError } = await supabase
+    .schema("fued_public")
+    .from("games")
+    .select("id, owner_user_id")
+    .eq("id", params.gameId)
+    .eq("owner_user_id", user.id)
+    .is("deleted_at", null)
+    .single();
+
+  if (gameError || !game) {
+    throw new Error(
+      `Failed to validate game ownership: ${gameError?.message ?? "Not found"}`,
+    );
+  }
+
   const extension = params.file.name.split(".").pop() ?? "bin";
-  const path = `users/${params.ownerUserId}/games/${params.gameId}/${params.assetType}/${crypto.randomUUID()}.${extension}`;
+  const path = `users/${user.id}/games/${params.gameId}/${params.assetType}/${crypto.randomUUID()}.${extension}`;
 
   const { error: uploadError } = await supabase.storage
-    .from("game-assets")
+    .from("fued-game-assets")
     .upload(path, params.file, { upsert: false });
 
   if (uploadError) {
@@ -24,13 +46,13 @@ export async function uploadGameAsset(params: {
   }
 
   const { data: assetRow, error: assetError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("game_assets")
     .insert({
-      owner_user_id: params.ownerUserId,
+      owner_user_id: user.id,
       game_id: params.gameId,
       asset_type: params.assetType,
-      storage_bucket: "game-assets",
+      storage_bucket: "fued-game-assets",
       storage_path: path,
       mime_type: params.file.type,
       file_size_bytes: params.file.size,
@@ -53,10 +75,11 @@ export async function uploadGameAsset(params: {
         : "postgame_asset_id";
 
   const { error: linkError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("games")
     .update({ [updateField]: assetRow.id })
-    .eq("id", params.gameId);
+    .eq("id", params.gameId)
+    .eq("owner_user_id", user.id);
 
   if (linkError) {
     throw new Error(`Failed to link asset to game: ${linkError.message}`);

@@ -9,7 +9,7 @@ export function subscribeToSession(sessionId: string, onChange: () => void) {
       "postgres_changes",
       {
         event: "*",
-        schema: "app_public",
+        schema: "fued_public",
         table: "session_state",
         filter: `session_id=eq.${sessionId}`,
       },
@@ -19,7 +19,7 @@ export function subscribeToSession(sessionId: string, onChange: () => void) {
       "postgres_changes",
       {
         event: "*",
-        schema: "app_public",
+        schema: "fued_public",
         table: "session_board_answers",
         filter: `session_id=eq.${sessionId}`,
       },

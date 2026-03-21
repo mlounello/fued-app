@@ -8,9 +8,9 @@ begin
     select 1 from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
     where t.typname = 'game_status'
-      and n.nspname = 'app_public'
+      and n.nspname = 'fued_public'
   ) then
-    create type app_public.game_status as enum (
+    create type fued_public.game_status as enum (
       'draft',
       'live',
       'archived'
@@ -25,9 +25,9 @@ begin
     select 1 from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
     where t.typname = 'session_status'
-      and n.nspname = 'app_public'
+      and n.nspname = 'fued_public'
   ) then
-    create type app_public.session_status as enum (
+    create type fued_public.session_status as enum (
       'inactive',
       'live',
       'paused',
@@ -43,9 +43,9 @@ begin
     select 1 from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
     where t.typname = 'screen_mode'
-      and n.nspname = 'app_public'
+      and n.nspname = 'fued_public'
   ) then
-    create type app_public.screen_mode as enum (
+    create type fued_public.screen_mode as enum (
       'pregame',
       'board',
       'question_overlay',
@@ -61,9 +61,9 @@ begin
     select 1 from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
     where t.typname = 'asset_type'
-      and n.nspname = 'app_public'
+      and n.nspname = 'fued_public'
   ) then
-    create type app_public.asset_type as enum (
+    create type fued_public.asset_type as enum (
       'logo',
       'pregame_image',
       'postgame_image'
@@ -78,9 +78,9 @@ begin
     select 1 from pg_type t
     join pg_namespace n on n.oid = t.typnamespace
     where t.typname = 'scoring_target'
-      and n.nspname = 'app_public'
+      and n.nspname = 'fued_public'
   ) then
-    create type app_public.scoring_target as enum (
+    create type fued_public.scoring_target as enum (
       'team_1',
       'team_2',
       'none'

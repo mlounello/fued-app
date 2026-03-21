@@ -5,7 +5,7 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
   const supabase = await createClient();
 
   const { data: game, error: gameError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("games")
     .select("*")
     .eq("id", gameId)
@@ -18,7 +18,7 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
   }
 
   const { data: boards, error: boardsError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("game_boards")
     .select(`
       id,
@@ -42,7 +42,7 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
   }
 
   const { data: sessionRows, error: sessionError } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("game_sessions")
     .select(`
       id,
@@ -78,7 +78,7 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
 
   if (session) {
     const { data: revealedRows, error: revealedError } = await supabase
-      .schema("app_public")
+      .schema("fued_public")
       .from("session_board_answers")
       .select("answer_id, is_revealed, revealed_for_team")
       .eq("session_id", session.id);

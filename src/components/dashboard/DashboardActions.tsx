@@ -1,11 +1,14 @@
-import Link from "next/link";
+import { createGame } from "@/actions/games";
 
 export function DashboardActions() {
   return (
-    <div className="flex gap-3">
-      <Link className="rounded-xl border px-3 py-2" href="/games/new">
+    <form action={createGame}>
+      <button
+        className="rounded-xl bg-[color:var(--secondary)] px-4 py-2 text-sm text-[color:var(--secondary-foreground)]"
+        type="submit"
+      >
         Create New Game
-      </Link>
-    </div>
+      </button>
+    </form>
   );
 }

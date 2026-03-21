@@ -14,17 +14,17 @@ export async function getAdminPageData(): Promise<{
     { data: assets, error: assetsError },
   ] = await Promise.all([
     supabase
-      .schema("app_public")
+      .schema("fued_public")
       .from("profiles")
       .select("id, email, display_name, is_admin, is_disabled, created_at, last_login_at")
       .order("created_at", { ascending: false }),
     supabase
-      .schema("app_public")
+      .schema("fued_public")
       .from("games")
       .select("id, title, owner_user_id, status, updated_at, deleted_at")
       .order("updated_at", { ascending: false }),
     supabase
-      .schema("app_public")
+      .schema("fued_public")
       .from("game_assets")
       .select("file_size_bytes")
       .is("deleted_at", null),

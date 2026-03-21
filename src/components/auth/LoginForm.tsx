@@ -30,6 +30,18 @@ export function LoginForm() {
             return;
           }
 
+          const syncResponse = await fetch("/auth/session-sync", {
+            method: "POST",
+          });
+
+          if (!syncResponse.ok) {
+            const payload = (await syncResponse.json().catch(() => null)) as
+              | { error?: string }
+              | null;
+            setError(payload?.error === "disabled" ? "This account has been disabled." : "Unable to prepare your profile.");
+            return;
+          }
+
           router.push("/dashboard");
           router.refresh();
         });

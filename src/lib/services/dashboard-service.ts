@@ -5,7 +5,7 @@ export async function getDashboardGames(userId: string): Promise<GameSummary[]> 
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .from("games")
     .select(`
       id,

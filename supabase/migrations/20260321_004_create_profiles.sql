@@ -1,6 +1,6 @@
 begin;
 
-create table if not exists app_public.profiles (
+create table if not exists fued_public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   email text not null,
   display_name text null,
@@ -13,15 +13,15 @@ create table if not exists app_public.profiles (
 );
 
 create index if not exists idx_profiles_is_admin
-  on app_public.profiles (is_admin);
+  on fued_public.profiles (is_admin);
 
 create index if not exists idx_profiles_is_disabled
-  on app_public.profiles (is_disabled);
+  on fued_public.profiles (is_disabled);
 
-drop trigger if exists trg_profiles_set_updated_at on app_public.profiles;
+drop trigger if exists trg_profiles_set_updated_at on fued_public.profiles;
 create trigger trg_profiles_set_updated_at
-before update on app_public.profiles
+before update on fued_public.profiles
 for each row
-execute function app_private.set_updated_at();
+execute function fued_private.set_updated_at();
 
 commit;

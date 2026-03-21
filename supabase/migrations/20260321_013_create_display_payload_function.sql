@@ -1,12 +1,12 @@
 begin;
 
-create or replace function app_public.get_display_payload(
+create or replace function fued_public.get_display_payload(
   p_public_token text
 )
 returns jsonb
 language plpgsql
 security definer
-set search_path = public, app_public, app_private
+set search_path = pg_catalog
 as $$
 declare
   v_payload jsonb;
@@ -89,8 +89,8 @@ begin
               )
               order by a.display_position asc, a.sort_order asc, a.created_at asc
             )
-            from app_public.board_answers a
-            left join app_public.session_board_answers sba
+            from fued_public.board_answers a
+            left join fued_public.session_board_answers sba
               on sba.answer_id = a.id
              and sba.session_id = s.id
             where a.board_id = b.id
@@ -99,25 +99,23 @@ begin
         )
         order by b.sort_order asc, b.created_at asc
       )
-      from app_public.game_boards b
+      from fued_public.game_boards b
       where b.game_id = g.id
         and b.deleted_at is null
     )
   )
   into v_payload
-  from app_public.game_sessions s
-  join app_public.games g on g.id = s.game_id
-  join app_public.session_state st on st.session_id = s.id
-  left join app_public.game_assets ga_logo on ga_logo.id = g.logo_asset_id and ga_logo.deleted_at is null
-  left join app_public.game_assets ga_pre on ga_pre.id = g.pregame_asset_id and ga_pre.deleted_at is null
-  left join app_public.game_assets ga_post on ga_post.id = g.postgame_asset_id and ga_post.deleted_at is null
+  from fued_public.game_sessions s
+  join fued_public.games g on g.id = s.game_id
+  join fued_public.session_state st on st.session_id = s.id
+  left join fued_public.game_assets ga_logo on ga_logo.id = g.logo_asset_id and ga_logo.deleted_at is null
+  left join fued_public.game_assets ga_pre on ga_pre.id = g.pregame_asset_id and ga_pre.deleted_at is null
+  left join fued_public.game_assets ga_post on ga_post.id = g.postgame_asset_id and ga_post.deleted_at is null
   where s.public_token = p_public_token
   limit 1;
 
   return v_payload;
 end;
 $$;
-
-grant execute on function app_public.get_display_payload(text) to anon, authenticated;
 
 commit;

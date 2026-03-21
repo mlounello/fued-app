@@ -7,7 +7,7 @@ export async function getDisplayPayloadByToken(
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .schema("app_public")
+    .schema("fued_public")
     .rpc("get_display_payload", { p_public_token: token });
 
   if (error) {

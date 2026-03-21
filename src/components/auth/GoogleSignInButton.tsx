@@ -19,10 +19,12 @@ export function GoogleSignInButton() {
           startTransition(async () => {
             setError(null);
             const supabase = createClient();
+            const redirectBase =
+              process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
             const { error: signInError } = await supabase.auth.signInWithOAuth({
               provider: "google",
               options: {
-                redirectTo: `${window.location.origin}/auth/callback`,
+                redirectTo: `${redirectBase}/auth/callback`,
               },
             });
 
