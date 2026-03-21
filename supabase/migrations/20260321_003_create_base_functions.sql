@@ -19,13 +19,13 @@ as $$
   select auth.uid()
 $$;
 
-create or replace function fued_private.generate_public_token()
+ccreate or replace function fued_private.generate_public_token()
 returns text
 language sql
 volatile
 set search_path = pg_catalog
 as $$
-  select encode(gen_random_bytes(24), 'hex')
+  select encode(extensions.gen_random_bytes(24), 'hex')
 $$;
 
 commit;

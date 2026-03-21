@@ -34,7 +34,7 @@ export function GameList({ games }: { games: GameSummary[] }) {
                 className="rounded-xl bg-[color:var(--secondary)] px-3 py-2 text-sm text-[color:var(--secondary-foreground)]"
                 href={`/games/${game.id}/run`}
               >
-                Run
+                Open Operator
               </Link>
               <form action={duplicateGame.bind(null, game.id)}>
                 <button

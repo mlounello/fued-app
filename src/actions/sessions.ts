@@ -1,5 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
 import type { ScoringTarget, ScreenMode } from "@/types/sessions";
 
@@ -16,6 +19,13 @@ export async function launchOrResumeSession(gameId: string) {
   }
 
   return data;
+}
+
+export async function launchOrResumeSessionFromOperator(gameId: string) {
+  await launchOrResumeSession(gameId);
+  revalidatePath(`/games/${gameId}/run`);
+  revalidatePath("/dashboard");
+  redirect(`/games/${gameId}/run`);
 }
 
 export async function changeSessionBoard(sessionId: string, boardId: string) {

@@ -1,3 +1,4 @@
+import { launchOrResumeSessionFromOperator } from "@/actions/sessions";
 import type { RunScreenData } from "@/types/sessions";
 
 import { DisplayLinkPanel } from "./DisplayLinkPanel";
@@ -18,7 +19,19 @@ export function SessionHeader({
             {session ? `Session is ${session.sessionStatus}` : "No live session yet"}
           </p>
         </div>
-        <DisplayLinkPanel token={session?.publicToken ?? null} />
+        <div className="flex flex-col items-end gap-3">
+          {!session ? (
+            <form action={launchOrResumeSessionFromOperator.bind(null, game.id)}>
+              <button
+                className="rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--accent-foreground)]"
+                type="submit"
+              >
+                Launch Session
+              </button>
+            </form>
+          ) : null}
+          <DisplayLinkPanel token={session?.publicToken ?? null} />
+        </div>
       </div>
     </div>
   );
