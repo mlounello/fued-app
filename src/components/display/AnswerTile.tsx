@@ -1,13 +1,21 @@
+import type { CSSProperties } from "react";
+
 import type { DisplayAnswer } from "@/types/display";
 
 export function AnswerTile({ answer }: { answer: DisplayAnswer }) {
   return (
     <div
-      className={`flex min-h-28 items-center justify-between rounded-2xl px-5 py-4 transition-all duration-500 ${
-        answer.isRevealed
-          ? "scale-[1.02] bg-[rgba(247,201,72,0.18)] shadow-[0_0_0_1px_rgba(247,201,72,0.35)]"
-          : "bg-black/20"
-      }`}
+      className="flex min-h-28 items-center justify-between rounded-2xl px-5 py-4 transition-all duration-500"
+      style={{
+        backgroundColor: answer.isRevealed
+          ? "color-mix(in srgb, var(--display-secondary) 24%, transparent)"
+          : "color-mix(in srgb, var(--display-primary) 72%, transparent)",
+        boxShadow: answer.isRevealed
+          ? "0 0 0 1px color-mix(in srgb, var(--display-secondary) 50%, transparent)"
+          : "0 0 0 1px color-mix(in srgb, var(--display-primary) 35%, transparent)",
+        color: "var(--display-accent)",
+        transform: answer.isRevealed ? "scale(1.02)" : "scale(1)",
+      } as CSSProperties}
     >
       <span className="text-xl font-bold">{answer.displayPosition}</span>
       <span

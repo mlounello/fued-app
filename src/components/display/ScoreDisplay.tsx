@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { DisplayPayload } from "@/types/display";
 
 export function ScoreDisplay({ payload }: { payload: DisplayPayload }) {
@@ -7,12 +9,34 @@ export function ScoreDisplay({ payload }: { payload: DisplayPayload }) {
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <div className="rounded-2xl bg-black/20 p-4">
-        <div className="text-sm text-slate-300">{payload.game.team1Name}</div>
+      <div
+        className="rounded-2xl p-4"
+        style={{
+          backgroundColor: "color-mix(in srgb, var(--display-primary) 72%, transparent)",
+          color: "var(--display-accent)",
+        } as CSSProperties}
+      >
+        <div
+          className="text-sm"
+          style={{ color: "var(--display-secondary)" } as CSSProperties}
+        >
+          {payload.game.team1Name}
+        </div>
         <div className="text-4xl font-bold">{payload.state.score1}</div>
       </div>
-      <div className="rounded-2xl bg-black/20 p-4">
-        <div className="text-sm text-slate-300">{payload.game.team2Name}</div>
+      <div
+        className="rounded-2xl p-4"
+        style={{
+          backgroundColor: "color-mix(in srgb, var(--display-primary) 72%, transparent)",
+          color: "var(--display-accent)",
+        } as CSSProperties}
+      >
+        <div
+          className="text-sm"
+          style={{ color: "var(--display-secondary)" } as CSSProperties}
+        >
+          {payload.game.team2Name}
+        </div>
         <div className="text-4xl font-bold">{payload.state.score2}</div>
       </div>
     </div>
