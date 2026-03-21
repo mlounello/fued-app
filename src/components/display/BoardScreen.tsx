@@ -24,11 +24,13 @@ export function BoardScreen({
         </p>
         <h1 className="mt-4 text-5xl font-bold">{board.questionText}</h1>
       </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         {board.answers.map((answer) => (
           <AnswerTile key={answer.id} answer={answer} />
         ))}
       </div>
+
       <div className="grid gap-4 md:grid-cols-[1fr_auto]">
         <ScoreDisplay payload={payload} />
         <StrikeDisplay count={payload.state.strikesCount} />

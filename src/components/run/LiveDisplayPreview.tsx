@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { DisplayShell } from "@/components/display/DisplayShell";
 import type { DisplayPayload } from "@/types/display";
 
@@ -22,10 +24,36 @@ export function LiveDisplayPreview({
     );
   }
 
+  const background = payload.game.brandBackgroundColor ?? "#111827";
+  const primary = payload.game.brandPrimaryColor ?? "#006b54";
+  const secondary = payload.game.brandSecondaryColor ?? "#FCC917";
+  const accent = payload.game.brandAccentColor ?? "#FFFFFF";
+
   return (
-    <div className="overflow-hidden rounded-[2rem] border border-[color:var(--border)] bg-black/10">
-      <div className="border-b border-white/10 bg-[#101827] px-6 py-4 text-white">
-        <div className="text-sm uppercase tracking-[0.3em] text-yellow-300">
+    <div
+      className="overflow-hidden rounded-[2rem] border"
+      style={
+        {
+          backgroundColor: background,
+          borderColor: secondary,
+          color: accent,
+        } as CSSProperties
+      }
+    >
+      <div
+        className="border-b px-6 py-4"
+        style={
+          {
+            backgroundColor: primary,
+            borderColor: secondary,
+            color: accent,
+          } as CSSProperties
+        }
+      >
+        <div
+          className="text-sm uppercase tracking-[0.3em]"
+          style={{ color: secondary } as CSSProperties}
+        >
           Audience Preview
         </div>
       </div>

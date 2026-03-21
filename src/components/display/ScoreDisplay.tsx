@@ -10,11 +10,14 @@ export function ScoreDisplay({ payload }: { payload: DisplayPayload }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <div
-        className="rounded-2xl p-4"
-        style={{
-          backgroundColor: "color-mix(in srgb, var(--display-primary) 72%, transparent)",
-          color: "var(--display-accent)",
-        } as CSSProperties}
+        className="rounded-2xl border p-4"
+        style={
+          {
+            backgroundColor: "var(--display-primary)",
+            borderColor: "var(--display-secondary)",
+            color: "var(--display-accent)",
+          } as CSSProperties
+        }
       >
         <div
           className="text-sm"
@@ -24,12 +27,16 @@ export function ScoreDisplay({ payload }: { payload: DisplayPayload }) {
         </div>
         <div className="text-4xl font-bold">{payload.state.score1}</div>
       </div>
+
       <div
-        className="rounded-2xl p-4"
-        style={{
-          backgroundColor: "color-mix(in srgb, var(--display-primary) 72%, transparent)",
-          color: "var(--display-accent)",
-        } as CSSProperties}
+        className="rounded-2xl border p-4"
+        style={
+          {
+            backgroundColor: "var(--display-primary)",
+            borderColor: "var(--display-secondary)",
+            color: "var(--display-accent)",
+          } as CSSProperties
+        }
       >
         <div
           className="text-sm"

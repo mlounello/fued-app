@@ -13,24 +13,25 @@ export function DisplayShell({ payload }: { payload: DisplayPayload }) {
     payload.boards[0] ??
     null;
 
-  const style = {
-    backgroundColor:
-      payload.game.brandBackgroundColor ?? payload.game.brandSecondaryColor,
-    color: payload.game.brandAccentColor ?? "#ffffff",
-    "--display-primary": payload.game.brandPrimaryColor,
-    "--display-secondary": payload.game.brandSecondaryColor,
-    "--display-accent": payload.game.brandAccentColor ?? "#ffffff",
-    "--display-background":
-      payload.game.brandBackgroundColor ?? payload.game.brandSecondaryColor,
-  } as CSSProperties;
+  const background = payload.game.brandBackgroundColor ?? "#111827";
+  const primary = payload.game.brandPrimaryColor ?? "#006b54";
+  const secondary = payload.game.brandSecondaryColor ?? "#FCC917";
+  const accent = payload.game.brandAccentColor ?? "#FFFFFF";
 
   return (
     <div
       className="min-h-[calc(100vh-8rem)] rounded-[2rem] border p-8"
-      style={{
-        ...style,
-        borderColor: "color-mix(in srgb, var(--display-secondary) 35%, transparent)",
-      }}
+      style={
+        {
+          backgroundColor: background,
+          color: accent,
+          borderColor: secondary,
+          "--display-background": background,
+          "--display-primary": primary,
+          "--display-secondary": secondary,
+          "--display-accent": accent,
+        } as CSSProperties
+      }
     >
       {payload.state.currentScreen === "pregame" ? (
         <PregameScreen payload={payload} />
