@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { DisplayShell } from "@/components/display/DisplayShell";
+import { SessionRealtimeRefresh } from "@/components/shared/SessionRealtimeRefresh";
 import { getDisplayPayloadByToken } from "@/lib/services/display-service";
 
 export default async function DisplayPage({
@@ -15,5 +16,10 @@ export default async function DisplayPage({
     notFound();
   }
 
-  return <DisplayShell payload={payload} />;
+  return (
+    <>
+      <SessionRealtimeRefresh sessionId={payload.session.id} />
+      <DisplayShell payload={payload} />
+    </>
+  );
 }

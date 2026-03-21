@@ -5,6 +5,7 @@ import { RunScreenModeControls } from "@/components/run/RunScreenModeControls";
 import { ScoreControlPanel } from "@/components/run/ScoreControlPanel";
 import { SessionHeader } from "@/components/run/SessionHeader";
 import { StrikeControlPanel } from "@/components/run/StrikeControlPanel";
+import { SessionRealtimeRefresh } from "@/components/shared/SessionRealtimeRefresh";
 import { getRunScreenData } from "@/lib/services/session-service";
 
 export default async function RunGamePage({
@@ -17,6 +18,7 @@ export default async function RunGamePage({
 
   return (
     <div className="space-y-6">
+      <SessionRealtimeRefresh sessionId={data.session?.sessionId ?? null} />
       <SessionHeader game={data.game} session={data.session} />
       <BoardNavigator boards={data.boards} session={data.session} />
       <RunScreenModeControls session={data.session} />
