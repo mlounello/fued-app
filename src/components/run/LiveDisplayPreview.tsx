@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 import { DisplayShell } from "@/components/display/DisplayShell";
+import { resolveDisplayTheme } from "@/lib/utils/display-theme";
 import type { DisplayPayload } from "@/types/display";
 
 export function LiveDisplayPreview({
@@ -24,19 +25,21 @@ export function LiveDisplayPreview({
     );
   }
 
-  const background = payload.game.brandBackgroundColor ?? "#111827";
-  const primary = payload.game.brandPrimaryColor ?? "#006b54";
-  const secondary = payload.game.brandSecondaryColor ?? "#FCC917";
-  const accent = payload.game.brandAccentColor ?? "#FFFFFF";
+  const theme = resolveDisplayTheme({
+    brandPrimaryColor: payload.game.brandPrimaryColor,
+    brandSecondaryColor: payload.game.brandSecondaryColor,
+    brandAccentColor: payload.game.brandAccentColor,
+    brandBackgroundColor: payload.game.brandBackgroundColor,
+  });
 
   return (
     <div
       className="overflow-hidden rounded-[2rem] border shadow-[0_20px_70px_rgba(0,0,0,0.18)]"
       style={
         {
-          backgroundColor: background,
-          borderColor: secondary,
-          color: accent,
+          backgroundColor: theme.background,
+          borderColor: theme.secondary,
+          color: theme.accent,
         } as CSSProperties
       }
     >
@@ -44,15 +47,15 @@ export function LiveDisplayPreview({
         className="border-b px-6 py-4"
         style={
           {
-            backgroundColor: primary,
-            borderColor: secondary,
-            color: accent,
+            backgroundColor: theme.primary,
+            borderColor: theme.secondary,
+            color: theme.accent,
           } as CSSProperties
         }
       >
         <div
           className="text-sm uppercase tracking-[0.3em]"
-          style={{ color: secondary } as CSSProperties}
+          style={{ color: theme.secondary } as CSSProperties}
         >
           Audience Preview
         </div>

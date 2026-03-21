@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 
+import { resolveDisplayTheme } from "@/lib/utils/display-theme";
 import type { DisplayPayload } from "@/types/display";
 
 import { BoardScreen } from "./BoardScreen";
@@ -19,10 +20,12 @@ export function DisplayShell({
     payload.boards[0] ??
     null;
 
-  const background = payload.game.brandBackgroundColor ?? "#111827";
-  const primary = payload.game.brandPrimaryColor ?? "#006b54";
-  const secondary = payload.game.brandSecondaryColor ?? "#FCC917";
-  const accent = payload.game.brandAccentColor ?? "#FFFFFF";
+  const theme = resolveDisplayTheme({
+    brandPrimaryColor: payload.game.brandPrimaryColor,
+    brandSecondaryColor: payload.game.brandSecondaryColor,
+    brandAccentColor: payload.game.brandAccentColor,
+    brandBackgroundColor: payload.game.brandBackgroundColor,
+  });
 
   return (
     <div
@@ -33,14 +36,14 @@ export function DisplayShell({
       }
       style={
         {
-          backgroundColor: background,
-          color: accent,
-          borderColor: secondary,
+          backgroundColor: theme.background,
+          color: theme.accent,
+          borderColor: theme.secondary,
           borderRadius: embedded ? "2rem" : "0",
-          "--display-background": background,
-          "--display-primary": primary,
-          "--display-secondary": secondary,
-          "--display-accent": accent,
+          "--display-background": theme.background,
+          "--display-primary": theme.primary,
+          "--display-secondary": theme.secondary,
+          "--display-accent": theme.accent,
         } as CSSProperties
       }
     >

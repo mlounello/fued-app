@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 
+import { DisplayViewportBackground } from "@/components/display/DisplayViewportBackground";
 import { DisplayShell } from "@/components/display/DisplayShell";
 import { SessionRealtimeRefresh } from "@/components/shared/SessionRealtimeRefresh";
+import { resolveDisplayTheme } from "@/lib/utils/display-theme";
 import { getDisplayPayloadByToken } from "@/lib/services/display-service";
 
 export default async function DisplayPage({
@@ -16,10 +18,18 @@ export default async function DisplayPage({
     notFound();
   }
 
+  const theme = resolveDisplayTheme({
+    brandPrimaryColor: payload.game.brandPrimaryColor,
+    brandSecondaryColor: payload.game.brandSecondaryColor,
+    brandAccentColor: payload.game.brandAccentColor,
+    brandBackgroundColor: payload.game.brandBackgroundColor,
+  });
+
   return (
-    <>
+    <div className="relative min-h-screen w-full">
+      <DisplayViewportBackground backgroundColor={theme.background} />
       <SessionRealtimeRefresh sessionId={payload.session.id} />
       <DisplayShell payload={payload} />
-    </>
+    </div>
   );
 }
