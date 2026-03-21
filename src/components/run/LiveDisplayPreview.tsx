@@ -31,7 +31,7 @@ export function LiveDisplayPreview({
 
   return (
     <div
-      className="overflow-hidden rounded-[2rem] border"
+      className="overflow-hidden rounded-[2rem] border shadow-[0_20px_70px_rgba(0,0,0,0.18)]"
       style={
         {
           backgroundColor: background,
@@ -61,7 +61,7 @@ export function LiveDisplayPreview({
         className="origin-top-left scale-[0.82] overflow-hidden"
         style={{ width: "121.95%" }}
       >
-        <DisplayShell payload={payload} />
+        <DisplayShell payload={payload} embedded />
       </div>
     </div>
   );

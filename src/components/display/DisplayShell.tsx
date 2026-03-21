@@ -7,7 +7,13 @@ import { PostgameScreen } from "./PostgameScreen";
 import { PregameScreen } from "./PregameScreen";
 import { QuestionOverlay } from "./QuestionOverlay";
 
-export function DisplayShell({ payload }: { payload: DisplayPayload }) {
+export function DisplayShell({
+  payload,
+  embedded = false,
+}: {
+  payload: DisplayPayload;
+  embedded?: boolean;
+}) {
   const board =
     payload.boards.find((item) => item.id === payload.state.currentBoardId) ??
     payload.boards[0] ??
@@ -20,12 +26,17 @@ export function DisplayShell({ payload }: { payload: DisplayPayload }) {
 
   return (
     <div
-      className="min-h-[calc(100vh-8rem)] rounded-[2rem] border p-8"
+      className={
+        embedded
+          ? "min-h-full border p-8"
+          : "min-h-screen w-full border-0 px-10 py-12"
+      }
       style={
         {
           backgroundColor: background,
           color: accent,
           borderColor: secondary,
+          borderRadius: embedded ? "2rem" : "0",
           "--display-background": background,
           "--display-primary": primary,
           "--display-secondary": secondary,
