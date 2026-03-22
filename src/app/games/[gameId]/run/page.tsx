@@ -6,7 +6,6 @@ import { ScoreControlPanel } from "@/components/run/ScoreControlPanel";
 import { SessionHeader } from "@/components/run/SessionHeader";
 import { StrikeControlPanel } from "@/components/run/StrikeControlPanel";
 import { SessionRealtimeRefresh } from "@/components/shared/SessionRealtimeRefresh";
-import { getDisplayPayloadByToken } from "@/lib/services/display-service";
 import { getRunScreenData } from "@/lib/services/session-service";
 
 export default async function RunGamePage({
@@ -16,9 +15,6 @@ export default async function RunGamePage({
 }) {
   const { gameId } = await params;
   const data = await getRunScreenData(gameId);
-  const previewPayload = data.session
-    ? await getDisplayPayloadByToken(data.session.publicToken)
-    : null;
 
   return (
     <div className="space-y-6">
@@ -27,7 +23,11 @@ export default async function RunGamePage({
       <BoardNavigator boards={data.boards} session={data.session} />
       <RunScreenModeControls session={data.session} />
       <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
-        <LiveDisplayPreview gameTitle={data.game.title} payload={previewPayload} />
+        <LiveDisplayPreview
+          game={data.game}
+          session={data.session}
+          boards={data.boards}
+        />
         <div className="space-y-6">
           <ScoreControlPanel game={data.game} session={data.session} />
           <StrikeControlPanel session={data.session} />

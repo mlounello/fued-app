@@ -1,5 +1,3 @@
-import type { CSSProperties } from "react";
-
 import type { DisplayBoard, DisplayPayload } from "@/types/display";
 
 export function QuestionOverlay({
@@ -10,15 +8,7 @@ export function QuestionOverlay({
 }) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center text-center">
-      <div>
-        <p
-          className="text-sm uppercase tracking-[0.3em]"
-          style={{ color: "var(--display-secondary)" } as CSSProperties}
-        >
-          Question
-        </p>
-        <h1 className="mt-4 max-w-5xl text-6xl font-bold">{board.questionText}</h1>
-      </div>
+      <h1 className="max-w-5xl text-6xl font-bold">{board.questionText}</h1>
     </div>
   );
 }

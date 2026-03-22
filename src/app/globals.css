@@ -28,11 +28,6 @@ body {
   color: var(--foreground);
 }
 
-html[data-display-mode="true"],
-body[data-display-mode="true"] {
-  background: var(--display-page-background) !important;
-}
-
 body {
   font-family: Georgia, serif;
 }

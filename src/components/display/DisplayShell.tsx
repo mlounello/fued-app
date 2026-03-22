@@ -1,6 +1,3 @@
-import type { CSSProperties } from "react";
-
-import { resolveDisplayTheme } from "@/lib/utils/display-theme";
 import type { DisplayPayload } from "@/types/display";
 
 import { BoardScreen } from "./BoardScreen";
@@ -8,46 +5,16 @@ import { PostgameScreen } from "./PostgameScreen";
 import { PregameScreen } from "./PregameScreen";
 import { QuestionOverlay } from "./QuestionOverlay";
 
-export function DisplayShell({
-  payload,
-  embedded = false,
-}: {
-  payload: DisplayPayload;
-  embedded?: boolean;
-}) {
+export function DisplayShell({ payload }: { payload: DisplayPayload }) {
   const board =
     payload.boards.find((item) => item.id === payload.state.currentBoardId) ??
     payload.boards[0] ??
     null;
 
-  const theme = resolveDisplayTheme({
-    brandPrimaryColor: payload.game.brandPrimaryColor,
-    brandSecondaryColor: payload.game.brandSecondaryColor,
-    brandAccentColor: payload.game.brandAccentColor,
-    brandBackgroundColor: payload.game.brandBackgroundColor,
-  });
-
   return (
     <div
-      className={
-        embedded
-          ? "min-h-full border p-8"
-          : "min-h-screen w-full px-10 py-12"
-      }
-      style={
-        {
-          backgroundColor: embedded ? theme.background : "transparent",
-          color: theme.accent,
-          borderColor: theme.secondary,
-          borderWidth: embedded ? "1px" : "0",
-          borderStyle: embedded ? "solid" : "none",
-          borderRadius: embedded ? "2rem" : "0",
-          "--display-background": theme.background,
-          "--display-primary": theme.primary,
-          "--display-secondary": theme.secondary,
-          "--display-accent": theme.accent,
-        } as CSSProperties
-      }
+      className="min-h-[calc(100vh-8rem)] rounded-[2rem] p-8 text-white"
+      style={{ backgroundColor: payload.game.brandSecondaryColor }}
     >
       {payload.state.currentScreen === "pregame" ? (
         <PregameScreen payload={payload} />
