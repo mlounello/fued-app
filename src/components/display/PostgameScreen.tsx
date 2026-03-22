@@ -2,10 +2,14 @@ import type { DisplayPayload } from "@/types/display";
 
 export function PostgameScreen({ payload }: { payload: DisplayPayload }) {
   const hasVisual = Boolean(payload.assets.postgameImage?.url);
+  const frameStyle = {
+    width: "min(90vw, calc((100vh - 11rem) * 16 / 9))",
+    maxHeight: "calc(100vh - 11rem)",
+  };
 
   return (
-    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center">
-      <div className="w-full max-w-[min(90vw,1600px)]">
+    <div className="flex h-full min-h-0 items-center justify-center">
+      <div className="flex w-full max-w-[min(92vw,1700px)] flex-col items-center justify-center">
         {payload.assets.logo?.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -15,7 +19,7 @@ export function PostgameScreen({ payload }: { payload: DisplayPayload }) {
           />
         ) : null}
 
-        <div className="mx-auto w-full max-w-[min(88vw,1500px)]">
+        <div className="mx-auto w-full" style={frameStyle}>
           <div className="relative aspect-video overflow-hidden rounded-[2rem] border-[6px] border-[color:var(--display-secondary)] bg-[color:var(--display-primary)] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
             {payload.assets.postgameImage?.url ? (
               <>
