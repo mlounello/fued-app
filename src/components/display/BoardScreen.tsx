@@ -15,30 +15,30 @@ export function BoardScreen({
 }) {
   return (
     <div
-      className="flex min-h-[calc(100vh-2rem)] flex-col justify-between rounded-[2rem] border-[6px] px-4 py-5 md:px-6 md:py-6 lg:px-8 lg:py-8"
+      className="flex h-full min-h-0 flex-col justify-between rounded-[2rem] border-[6px] px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.75rem,1.5vh,1.5rem)]"
       style={{ borderColor: "var(--display-secondary)" } as CSSProperties}
     >
-      <div className="space-y-6 md:space-y-8">
+      <div className="flex min-h-0 flex-1 flex-col gap-[clamp(0.5rem,1.2vh,1rem)]">
         <div className="text-center">
           <p
-            className="text-[clamp(0.9rem,1.2vw,1.3rem)] font-bold uppercase tracking-[0.45em]"
+            className="text-[clamp(0.75rem,0.95vw,1.05rem)] font-bold uppercase tracking-[0.35em]"
             style={{ color: "var(--display-secondary)" } as CSSProperties}
           >
             Board
           </p>
-          <h1 className="mx-auto mt-3 max-w-[18ch] text-balance text-[clamp(2.6rem,5.6vw,5.9rem)] font-black leading-[0.95]">
+          <h1 className="mx-auto mt-[clamp(0.25rem,0.8vh,0.75rem)] max-w-[18ch] text-balance text-[clamp(1.65rem,min(3.5vw,4vh),4rem)] font-black leading-[0.92]">
             {board.questionText}
           </h1>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 md:gap-4 lg:gap-5">
+        <div className="grid min-h-0 flex-1 auto-rows-fr gap-[clamp(0.45rem,1vh,0.9rem)] md:grid-cols-2">
           {board.answers.map((answer) => (
             <AnswerTile key={answer.id} answer={answer} />
           ))}
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 md:mt-6 md:grid-cols-[1fr_auto] md:gap-4 lg:mt-8 lg:gap-5">
+      <div className="mt-[clamp(0.5rem,1.2vh,1rem)] grid gap-[clamp(0.45rem,1vh,0.9rem)] md:grid-cols-[1fr_auto]">
         <ScoreDisplay payload={payload} />
         <StrikeDisplay count={payload.state.strikesCount} />
       </div>

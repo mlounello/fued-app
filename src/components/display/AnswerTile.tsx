@@ -5,7 +5,7 @@ import type { DisplayAnswer } from "@/types/display";
 export function AnswerTile({ answer }: { answer: DisplayAnswer }) {
   return (
     <div
-      className="relative flex min-h-28 items-center justify-center rounded-[1.4rem] border-[4px] px-4 py-4 md:min-h-32 md:px-5 lg:min-h-36 lg:px-6"
+      className="relative flex min-h-0 h-full items-center justify-center rounded-[1.2rem] border-[4px] px-[clamp(0.75rem,1.2vw,1.2rem)] py-[clamp(0.45rem,0.9vh,0.8rem)]"
       style={
         {
           backgroundColor: "var(--display-primary)",
@@ -14,11 +14,11 @@ export function AnswerTile({ answer }: { answer: DisplayAnswer }) {
         } as CSSProperties
       }
     >
-      <span className="max-w-[calc(100%-5rem)] text-center text-[clamp(1.8rem,3.8vw,3.8rem)] font-black leading-[0.95] tracking-tight">
+      <span className="max-w-[calc(100%-4.25rem)] text-center text-[clamp(1.1rem,min(2.6vw,2.8vh),2.4rem)] font-black leading-[0.92] tracking-tight">
         {answer.answerText ?? "........"}
       </span>
       <span
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-right text-[clamp(1.5rem,3vw,3.2rem)] font-black leading-none md:right-4 lg:right-5"
+        className="absolute right-[clamp(0.6rem,1vw,1rem)] top-1/2 -translate-y-1/2 text-right text-[clamp(1rem,min(2vw,2.2vh),2rem)] font-black leading-none"
         style={{ color: "var(--display-secondary)" } as CSSProperties}
       >
         {answer.isRevealed ? answer.pointValue : ""}

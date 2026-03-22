@@ -23,7 +23,7 @@ export function DisplayShell({ payload }: { payload: DisplayPayload }) {
 
   return (
     <div
-      className="min-h-screen w-full px-3 py-3 text-white md:px-4 md:py-4 lg:px-5 lg:py-5"
+      className="h-screen w-full overflow-hidden px-[max(0.75rem,1.4vw)] py-[max(0.75rem,1.4vh)] text-white"
       style={
         {
           backgroundColor: theme.background,
