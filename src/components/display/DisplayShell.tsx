@@ -1,3 +1,6 @@
+import type { CSSProperties } from "react";
+
+import { resolveDisplayTheme } from "@/lib/utils/display-theme";
 import type { DisplayPayload } from "@/types/display";
 
 import { BoardScreen } from "./BoardScreen";
@@ -11,10 +14,26 @@ export function DisplayShell({ payload }: { payload: DisplayPayload }) {
     payload.boards[0] ??
     null;
 
+  const theme = resolveDisplayTheme({
+    brandPrimaryColor: payload.game.brandPrimaryColor,
+    brandSecondaryColor: payload.game.brandSecondaryColor,
+    brandAccentColor: payload.game.brandAccentColor,
+    brandBackgroundColor: payload.game.brandBackgroundColor,
+  });
+
   return (
     <div
       className="min-h-[calc(100vh-8rem)] rounded-[2rem] p-8 text-white"
-      style={{ backgroundColor: payload.game.brandSecondaryColor }}
+      style={
+        {
+          backgroundColor: theme.background,
+          color: theme.accent,
+          "--display-primary": theme.primary,
+          "--display-secondary": theme.secondary,
+          "--display-accent": theme.accent,
+          "--display-background": theme.background,
+        } as CSSProperties
+      }
     >
       {payload.state.currentScreen === "pregame" ? (
         <PregameScreen payload={payload} />

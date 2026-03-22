@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { DisplayBoard, DisplayPayload } from "@/types/display";
 
 import { AnswerTile } from "./AnswerTile";
@@ -14,7 +16,10 @@ export function BoardScreen({
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-yellow-300">
+        <p
+          className="text-sm uppercase tracking-[0.3em]"
+          style={{ color: "var(--display-secondary)" } as CSSProperties}
+        >
           Board
         </p>
         <h1 className="mt-4 text-5xl font-bold">{board.questionText}</h1>
