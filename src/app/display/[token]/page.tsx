@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { DisplayShell } from "@/components/display/DisplayShell";
+import { LiveDisplayStage } from "@/components/display/LiveDisplayStage";
 import { getDisplayPayloadByToken } from "@/lib/services/display-service";
 
 export default async function DisplayPage({
@@ -15,5 +15,5 @@ export default async function DisplayPage({
     notFound();
   }
 
-  return <DisplayShell payload={payload} />;
+  return <LiveDisplayStage initialPayload={payload} token={token} />;
 }

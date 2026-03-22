@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 
 import type { DisplayBoard, DisplayPayload } from "@/types/display";
@@ -13,6 +16,18 @@ export function BoardScreen({
   payload: DisplayPayload;
   board: DisplayBoard;
 }) {
+  const [questionPhase, setQuestionPhase] = useState<"hidden" | "visible">("hidden");
+
+  useEffect(() => {
+    setQuestionPhase("hidden");
+
+    const frame = requestAnimationFrame(() => {
+      setQuestionPhase("visible");
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [board.id, board.questionText, payload.state.currentScreen]);
+
   return (
     <div
       className="flex h-full min-h-0 flex-col justify-between rounded-[2rem] border-[6px] px-[clamp(0.75rem,1.5vw,1.5rem)] py-[clamp(0.75rem,1.5vh,1.5rem)]"
@@ -20,13 +35,39 @@ export function BoardScreen({
     >
       <div className="flex min-h-0 flex-1 flex-col gap-[clamp(0.5rem,1.2vh,1rem)]">
         <div className="text-center">
+          <div
+            className="mx-auto flex w-fit items-center justify-center rounded-full border-[4px] px-[clamp(0.8rem,1.4vw,1.35rem)] py-[clamp(0.22rem,0.45vh,0.45rem)]"
+            style={{ borderColor: "var(--display-secondary)" } as CSSProperties}
+          >
+            <p
+              className="text-[clamp(0.75rem,0.95vw,1.05rem)] font-bold uppercase tracking-[0.35em]"
+              style={{ color: "var(--display-secondary)" } as CSSProperties}
+            >
+              Question
+            </p>
+          </div>
           <p
-            className="text-[clamp(0.75rem,0.95vw,1.05rem)] font-bold uppercase tracking-[0.35em]"
+            className="mt-[clamp(0.35rem,0.8vh,0.65rem)] text-[clamp(0.68rem,0.88vw,0.95rem)] font-bold uppercase tracking-[0.35em]"
             style={{ color: "var(--display-secondary)" } as CSSProperties}
           >
             Board
           </p>
-          <h1 className="mx-auto mt-[clamp(0.25rem,0.8vh,0.75rem)] max-w-[18ch] text-balance text-[clamp(1.65rem,min(3.5vw,4vh),4rem)] font-black leading-[0.92]">
+          <h1
+            className="mx-auto mt-[clamp(0.25rem,0.8vh,0.75rem)] max-w-[18ch] text-balance text-[clamp(1.65rem,min(3.5vw,4vh),4rem)] font-black leading-[0.92]"
+            style={
+              {
+                transition:
+                  "transform 380ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease, filter 300ms ease",
+                transform:
+                  questionPhase === "visible"
+                    ? "translateY(0) scale(1)"
+                    : "translateY(-3vh) scale(0.22)",
+                transformOrigin: "top center",
+                opacity: questionPhase === "visible" ? 1 : 0.12,
+                filter: questionPhase === "visible" ? "blur(0)" : "blur(6px)",
+              } as CSSProperties
+            }
+          >
             {board.questionText}
           </h1>
         </div>
