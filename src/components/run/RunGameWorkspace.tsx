@@ -95,9 +95,30 @@ function toDisplayPayload(
       brandBackgroundColor: game.branding.brandBackgroundColor,
     },
     assets: {
-      logo: null,
-      pregameImage: null,
-      postgameImage: null,
+      logo: game.assets.logoUrl
+        ? {
+            path: "",
+            bucket: "fued-game-assets",
+            mimeType: "image/*",
+            url: game.assets.logoUrl,
+          }
+        : null,
+      pregameImage: game.assets.pregameUrl
+        ? {
+            path: "",
+            bucket: "fued-game-assets",
+            mimeType: "image/*",
+            url: game.assets.pregameUrl,
+          }
+        : null,
+      postgameImage: game.assets.postgameUrl
+        ? {
+            path: "",
+            bucket: "fued-game-assets",
+            mimeType: "image/*",
+            url: game.assets.postgameUrl,
+          }
+        : null,
     },
     state: {
       currentBoardId: session.currentBoardId,

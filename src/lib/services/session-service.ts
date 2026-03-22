@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { resolveSignedAssetMap } from "@/lib/assets/resolve-asset-urls";
 import type { RunScreenData } from "@/types/sessions";
 
 export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
@@ -66,6 +67,39 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
     throw new Error(`Failed to load session: ${sessionError.message}`);
   }
 
+  const assetIds = [
+    game.logo_asset_id,
+    game.pregame_asset_id,
+    game.postgame_asset_id,
+  ].filter(Boolean);
+
+  let assetMap = new Map<
+    string,
+    {
+      id: string;
+      url: string;
+      mimeType: string;
+      originalFilename: string | null;
+      bucket: string;
+      path: string;
+    }
+  >();
+
+  if (assetIds.length) {
+    const { data: assetRows, error: assetError } = await supabase
+      .schema("fued_public")
+      .from("game_assets")
+      .select("id, storage_bucket, storage_path, mime_type, original_filename")
+      .in("id", assetIds)
+      .is("deleted_at", null);
+
+    if (assetError) {
+      throw new Error(`Failed to load session assets: ${assetError.message}`);
+    }
+
+    assetMap = await resolveSignedAssetMap(assetRows ?? []);
+  }
+
   const session = sessionRows?.[0] ?? null;
 
   let revealedMap = new Map<
@@ -116,9 +150,9 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
         brandBackgroundColor: game.brand_background_color,
       },
       assets: {
-        logoUrl: null,
-        pregameUrl: null,
-        postgameUrl: null,
+        logoUrl: game.logo_asset_id ? assetMap.get(game.logo_asset_id)?.url ?? null : null,
+        pregameUrl: game.pregame_asset_id ? assetMap.get(game.pregame_asset_id)?.url ?? null : null,
+        postgameUrl: game.postgame_asset_id ? assetMap.get(game.postgame_asset_id)?.url ?? null : null,
       },
     },
     session: session

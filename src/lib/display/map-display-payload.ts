@@ -30,6 +30,7 @@ export function mapDisplayPayloadData(data: any): DisplayPayload {
             path: data.assets.logo.path,
             bucket: data.assets.logo.bucket,
             mimeType: data.assets.logo.mime_type,
+            url: data.assets.logo.url,
           }
         : null,
       pregameImage: data.assets.pregame_image
@@ -37,6 +38,7 @@ export function mapDisplayPayloadData(data: any): DisplayPayload {
             path: data.assets.pregame_image.path,
             bucket: data.assets.pregame_image.bucket,
             mimeType: data.assets.pregame_image.mime_type,
+            url: data.assets.pregame_image.url,
           }
         : null,
       postgameImage: data.assets.postgame_image
@@ -44,6 +46,7 @@ export function mapDisplayPayloadData(data: any): DisplayPayload {
             path: data.assets.postgame_image.path,
             bucket: data.assets.postgame_image.bucket,
             mimeType: data.assets.postgame_image.mime_type,
+            url: data.assets.postgame_image.url,
           }
         : null,
     },

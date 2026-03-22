@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { mapDisplayPayloadData } from "@/lib/display/map-display-payload";
 import { subscribeToSession } from "@/lib/realtime/display-realtime";
-import { createClient } from "@/lib/supabase/browser";
 import type { DisplayPayload } from "@/types/display";
 
 import { DisplayShell } from "./DisplayShell";
@@ -24,18 +22,17 @@ export function LiveDisplayStage({
   }, [initialPayload]);
 
   useEffect(() => {
-    const supabase = createClient();
-
     const refreshPayload = async () => {
-      const { data, error } = await supabase
-        .schema("fued_public")
-        .rpc("get_display_payload", { p_public_token: token });
+      const response = await fetch(`/api/display-payload/${token}`, {
+        cache: "no-store",
+      });
 
-      if (error || !data) {
+      if (!response.ok) {
         return;
       }
 
-      setPayload(mapDisplayPayloadData(data));
+      const nextPayload = (await response.json()) as DisplayPayload;
+      setPayload(nextPayload);
     };
 
     const unsubscribe = subscribeToSession(initialPayload.session.id, () => {

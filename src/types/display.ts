@@ -40,9 +40,9 @@ export interface DisplayPayload {
     brandBackgroundColor: string | null;
   };
   assets: {
-    logo: { path: string; bucket: string; mimeType: string } | null;
-    pregameImage: { path: string; bucket: string; mimeType: string } | null;
-    postgameImage: { path: string; bucket: string; mimeType: string } | null;
+    logo: { path: string; bucket: string; mimeType: string; url: string } | null;
+    pregameImage: { path: string; bucket: string; mimeType: string; url: string } | null;
+    postgameImage: { path: string; bucket: string; mimeType: string; url: string } | null;
   };
   state: {
     currentBoardId: string | null;

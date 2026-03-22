@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { GameBoardDetail, GameSettings } from "@/types/games";
 
 import { BoardList } from "./BoardList";
+import { GameAssetsPanel } from "./GameAssetsPanel";
 import { GameSetupForm } from "./GameSetupForm";
 
 type TabKey = "setup" | "boards" | "assets";
@@ -46,7 +47,7 @@ export function GameEditorTabs({
 
       {tab === "setup" ? <GameSetupForm game={game} /> : null}
       {tab === "boards" ? <BoardList boards={boards} gameId={game.id} /> : null}
-      {tab === "assets" ? <div>Assets UI goes here.</div> : null}
+      {tab === "assets" ? <GameAssetsPanel game={game} /> : null}
     </div>
   );
 }

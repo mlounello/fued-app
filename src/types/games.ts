@@ -30,8 +30,11 @@ export interface GameBranding {
 
 export interface GameAssets {
   logoAssetId: string | null;
+  logoUrl: string | null;
   pregameAssetId: string | null;
+  pregameUrl: string | null;
   postgameAssetId: string | null;
+  postgameUrl: string | null;
 }
 
 export interface GameSettings {

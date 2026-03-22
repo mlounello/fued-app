@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { resolveSignedAssetMap } from "@/lib/assets/resolve-asset-urls";
 import type { GameBoardDetail, GameSettings } from "@/types/games";
 
 export async function getGameEditorData(gameId: string): Promise<{
@@ -44,6 +45,39 @@ export async function getGameEditorData(gameId: string): Promise<{
     throw new Error(`Failed to load boards: ${boardsError.message}`);
   }
 
+  const assetIds = [
+    game.logo_asset_id,
+    game.pregame_asset_id,
+    game.postgame_asset_id,
+  ].filter(Boolean);
+
+  let assetMap = new Map<
+    string,
+    {
+      id: string;
+      url: string;
+      mimeType: string;
+      originalFilename: string | null;
+      bucket: string;
+      path: string;
+    }
+  >();
+
+  if (assetIds.length) {
+    const { data: assetRows, error: assetError } = await supabase
+      .schema("fued_public")
+      .from("game_assets")
+      .select("id, storage_bucket, storage_path, mime_type, original_filename")
+      .in("id", assetIds)
+      .is("deleted_at", null);
+
+    if (assetError) {
+      throw new Error(`Failed to load game assets: ${assetError.message}`);
+    }
+
+    assetMap = await resolveSignedAssetMap(assetRows ?? []);
+  }
+
   return {
     game: {
       id: game.id,
@@ -65,8 +99,11 @@ export async function getGameEditorData(gameId: string): Promise<{
       },
       assets: {
         logoAssetId: game.logo_asset_id,
+        logoUrl: game.logo_asset_id ? assetMap.get(game.logo_asset_id)?.url ?? null : null,
         pregameAssetId: game.pregame_asset_id,
+        pregameUrl: game.pregame_asset_id ? assetMap.get(game.pregame_asset_id)?.url ?? null : null,
         postgameAssetId: game.postgame_asset_id,
+        postgameUrl: game.postgame_asset_id ? assetMap.get(game.postgame_asset_id)?.url ?? null : null,
       },
       createdAt: game.created_at,
       updatedAt: game.updated_at,
