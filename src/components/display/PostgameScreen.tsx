@@ -4,15 +4,17 @@ import type { DisplayPayload } from "@/types/display";
 
 export function PostgameScreen({ payload }: { payload: DisplayPayload }) {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center text-center">
+    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center text-center">
       <div>
         <p
-          className="text-sm uppercase tracking-[0.3em]"
+          className="text-[clamp(0.95rem,1.2vw,1.25rem)] font-bold uppercase tracking-[0.45em]"
           style={{ color: "var(--display-secondary)" } as CSSProperties}
         >
           Thanks for playing
         </p>
-        <h1 className="mt-4 text-6xl font-bold">{payload.game.title}</h1>
+        <h1 className="mt-5 text-balance text-[clamp(3.2rem,7vw,7rem)] font-black leading-[0.95]">
+          {payload.game.title}
+        </h1>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 export function StrikeDisplay({ count }: { count: number }) {
   return (
     <div
-      className="flex items-center gap-3 rounded-2xl border px-6 py-4 text-2xl font-bold"
+      className="flex items-center gap-4 rounded-[1.4rem] border-[4px] px-5 py-4 text-[clamp(1.5rem,2.2vw,2.4rem)] font-black"
       style={
         {
           backgroundColor: "var(--display-primary)",
@@ -12,8 +12,11 @@ export function StrikeDisplay({ count }: { count: number }) {
         } as CSSProperties
       }
     >
-      <span>Strikes</span>
-      <span style={{ color: "var(--display-secondary)" } as CSSProperties}>
+      <span className="uppercase tracking-[0.12em]">Strikes</span>
+      <span
+        className="text-[clamp(2.2rem,3.8vw,3.6rem)] leading-none"
+        style={{ color: "var(--display-secondary)" } as CSSProperties}
+      >
         {count}
       </span>
     </div>
