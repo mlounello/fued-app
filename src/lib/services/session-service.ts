@@ -54,6 +54,8 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
         current_screen,
         strikes_count,
         sound_enabled,
+        show_game_title,
+        show_strikes_bar,
         score_1,
         score_2
       )
@@ -164,6 +166,8 @@ export async function getRunScreenData(gameId: string): Promise<RunScreenData> {
           currentScreen: session.session_state?.[0]?.current_screen ?? "pregame",
           strikesCount: session.session_state?.[0]?.strikes_count ?? 0,
           soundEnabled: session.session_state?.[0]?.sound_enabled ?? true,
+          showGameTitle: session.session_state?.[0]?.show_game_title ?? true,
+          showStrikesBar: session.session_state?.[0]?.show_strikes_bar ?? true,
           score1: session.session_state?.[0]?.score_1 ?? 0,
           score2: session.session_state?.[0]?.score_2 ?? 0,
         }

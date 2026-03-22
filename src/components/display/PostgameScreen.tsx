@@ -1,38 +1,51 @@
-import type { CSSProperties } from "react";
-
 import type { DisplayPayload } from "@/types/display";
 
 export function PostgameScreen({ payload }: { payload: DisplayPayload }) {
+  const hasVisual = Boolean(payload.assets.postgameImage?.url);
+
   return (
-    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center text-center">
-      <div className="max-w-[min(82vw,1200px)]">
+    <div className="flex min-h-[calc(100vh-2rem)] items-center justify-center">
+      <div className="w-full max-w-[min(90vw,1600px)]">
         {payload.assets.logo?.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             alt={`${payload.game.title} logo`}
-            className="mx-auto mb-6 max-h-[14vh] max-w-[24vw] object-contain"
+            className="mx-auto mb-[clamp(0.75rem,1.6vh,1.5rem)] max-h-[10vh] max-w-[18vw] object-contain"
             src={payload.assets.logo.url}
           />
         ) : null}
-        {payload.assets.postgameImage?.url ? (
-          <div className="mx-auto mb-6 overflow-hidden rounded-[1.5rem] border-[4px] border-[color:var(--display-secondary)]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt={`${payload.game.title} postgame`}
-              className="max-h-[42vh] w-full object-cover"
-              src={payload.assets.postgameImage.url}
-            />
+
+        <div className="mx-auto w-full max-w-[min(88vw,1500px)]">
+          <div className="relative aspect-video overflow-hidden rounded-[2rem] border-[6px] border-[color:var(--display-secondary)] bg-[color:var(--display-primary)] shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+            {payload.assets.postgameImage?.url ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  alt={`${payload.game.title} postgame`}
+                  className="h-full w-full object-cover"
+                  src={payload.assets.postgameImage.url}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.08)_38%,rgba(0,0,0,0.6)_100%)]" />
+              </>
+            ) : (
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_45%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.2))]" />
+            )}
+
+            {payload.state.showGameTitle ? (
+              <div className="absolute inset-x-[clamp(1rem,3vw,3rem)] bottom-[clamp(1rem,4vh,3rem)] text-center">
+                <h1 className="text-balance text-[clamp(2.4rem,min(5vw,6vh),5.4rem)] font-black leading-[0.92] text-[color:var(--display-accent)] drop-shadow-[0_4px_14px_rgba(0,0,0,0.45)]">
+                  {payload.game.title}
+                </h1>
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        {!hasVisual && !payload.state.showGameTitle ? (
+          <div className="mt-[clamp(1rem,2.2vh,1.75rem)] text-center text-[clamp(1rem,1.5vw,1.4rem)] font-bold uppercase tracking-[0.28em] text-[color:var(--display-secondary)]">
+            Thanks for playing
           </div>
         ) : null}
-        <p
-          className="text-[clamp(0.95rem,1.2vw,1.25rem)] font-bold uppercase tracking-[0.45em]"
-          style={{ color: "var(--display-secondary)" } as CSSProperties}
-        >
-          Thanks for playing
-        </p>
-        <h1 className="mt-5 text-balance text-[clamp(3.2rem,7vw,7rem)] font-black leading-[0.95]">
-          {payload.game.title}
-        </h1>
       </div>
     </div>
   );

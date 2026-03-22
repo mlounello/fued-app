@@ -11,6 +11,8 @@ export function SessionHeader({
   onLaunch,
   onReset,
   onToggleSound,
+  onToggleGameTitle,
+  onToggleStrikesBar,
 }: {
   game: RunScreenData["game"];
   session: RunScreenData["session"];
@@ -18,6 +20,8 @@ export function SessionHeader({
   onLaunch: () => void;
   onReset: () => void;
   onToggleSound: () => void;
+  onToggleGameTitle: () => void;
+  onToggleStrikesBar: () => void;
 }) {
   return (
     <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
@@ -48,6 +52,22 @@ export function SessionHeader({
                 disabled={pending}
               >
                 {session.soundEnabled ? "Sound On" : "Sound Off"}
+              </button>
+              <button
+                className="rounded-xl border border-[color:var(--border)] px-3 py-2 text-sm"
+                onClick={onToggleGameTitle}
+                type="button"
+                disabled={pending}
+              >
+                {session.showGameTitle ? "Hide Title" : "Show Title"}
+              </button>
+              <button
+                className="rounded-xl border border-[color:var(--border)] px-3 py-2 text-sm"
+                onClick={onToggleStrikesBar}
+                type="button"
+                disabled={pending}
+              >
+                {session.showStrikesBar ? "Hide Strikes Bar" : "Show Strikes Bar"}
               </button>
               <button
                 className="rounded-xl border border-[color:var(--border)] px-3 py-2 text-sm"

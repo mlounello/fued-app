@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   launchOrResumeSession,
   resetSession,
+  setSessionPresentationOptions,
   toggleSound,
 } from "@/actions/sessions";
 import { AnswerRevealPanel } from "@/components/run/AnswerRevealPanel";
@@ -125,6 +126,8 @@ function toDisplayPayload(
       currentScreen: session.currentScreen,
       strikesCount: session.strikesCount,
       soundEnabled: session.soundEnabled,
+      showGameTitle: session.showGameTitle,
+      showStrikesBar: session.showStrikesBar,
       score1: session.score1,
       score2: session.score2,
     },
@@ -223,11 +226,81 @@ export function RunGameWorkspace({
           currentScreen: result.currentScreen,
           strikesCount: result.strikesCount,
           soundEnabled: result.soundEnabled,
+          showGameTitle: result.showGameTitle,
+          showStrikesBar: result.showStrikesBar,
           score1: result.score1,
           score2: result.score2,
         }),
       );
       setBoards((current) => resetBoards(current));
+    });
+  };
+
+  const handleToggleGameTitle = () => {
+    if (!session) {
+      return;
+    }
+
+    const nextValue = !session.showGameTitle;
+    setSession((current) =>
+      applySessionPatch(current, {
+        showGameTitle: nextValue,
+      }),
+    );
+
+    withBackgroundRefresh(async () => {
+      try {
+        const result = await setSessionPresentationOptions(session.sessionId, {
+          showGameTitle: nextValue,
+        });
+        setSession((current) =>
+          applySessionPatch(current, {
+            showGameTitle: result.showGameTitle,
+            showStrikesBar: result.showStrikesBar,
+          }),
+        );
+      } catch (error) {
+        setSession((current) =>
+          applySessionPatch(current, {
+            showGameTitle: !nextValue,
+          }),
+        );
+        throw error;
+      }
+    });
+  };
+
+  const handleToggleStrikesBar = () => {
+    if (!session) {
+      return;
+    }
+
+    const nextValue = !session.showStrikesBar;
+    setSession((current) =>
+      applySessionPatch(current, {
+        showStrikesBar: nextValue,
+      }),
+    );
+
+    withBackgroundRefresh(async () => {
+      try {
+        const result = await setSessionPresentationOptions(session.sessionId, {
+          showStrikesBar: nextValue,
+        });
+        setSession((current) =>
+          applySessionPatch(current, {
+            showGameTitle: result.showGameTitle,
+            showStrikesBar: result.showStrikesBar,
+          }),
+        );
+      } catch (error) {
+        setSession((current) =>
+          applySessionPatch(current, {
+            showStrikesBar: !nextValue,
+          }),
+        );
+        throw error;
+      }
     });
   };
 
@@ -241,6 +314,8 @@ export function RunGameWorkspace({
         onLaunch={handleLaunch}
         onReset={handleReset}
         onToggleSound={handleToggleSound}
+        onToggleGameTitle={handleToggleGameTitle}
+        onToggleStrikesBar={handleToggleStrikesBar}
       />
       <BoardNavigator
         boards={boards}

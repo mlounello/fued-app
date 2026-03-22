@@ -46,14 +46,8 @@ export function BoardScreen({
               Question
             </p>
           </div>
-          <p
-            className="mt-[clamp(0.35rem,0.8vh,0.65rem)] text-[clamp(0.68rem,0.88vw,0.95rem)] font-bold uppercase tracking-[0.35em]"
-            style={{ color: "var(--display-secondary)" } as CSSProperties}
-          >
-            Board
-          </p>
           <h1
-            className="mx-auto mt-[clamp(0.25rem,0.8vh,0.75rem)] max-w-[18ch] text-balance text-[clamp(1.65rem,min(3.5vw,4vh),4rem)] font-black leading-[0.92]"
+            className="mx-auto mt-[clamp(0.65rem,1.2vh,1rem)] max-w-[18ch] text-balance text-[clamp(1.65rem,min(3.5vw,4vh),4rem)] font-black leading-[0.92]"
             style={
               {
                 transition:
@@ -81,7 +75,9 @@ export function BoardScreen({
 
       <div className="mt-[clamp(0.5rem,1.2vh,1rem)] grid gap-[clamp(0.45rem,1vh,0.9rem)] md:grid-cols-[1fr_auto]">
         <ScoreDisplay payload={payload} />
-        <StrikeDisplay count={payload.state.strikesCount} />
+        {payload.state.showStrikesBar ? (
+          <StrikeDisplay count={payload.state.strikesCount} />
+        ) : null}
       </div>
     </div>
   );

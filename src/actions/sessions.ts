@@ -36,6 +36,8 @@ export async function launchOrResumeSession(gameId: string) {
     currentScreen: row.current_screen,
     strikesCount: row.strikes_count,
     soundEnabled: row.sound_enabled,
+    showGameTitle: row.show_game_title ?? true,
+    showStrikesBar: row.show_strikes_bar ?? true,
     score1: row.score_1,
     score2: row.score_2,
   };
@@ -241,6 +243,48 @@ export async function toggleSound(sessionId: string, enabled: boolean) {
   };
 }
 
+export async function setSessionPresentationOptions(
+  sessionId: string,
+  options: {
+    showGameTitle?: boolean;
+    showStrikesBar?: boolean;
+  },
+) {
+  const supabase = await createClient();
+
+  const update: Record<string, boolean | string> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (options.showGameTitle !== undefined) {
+    update.show_game_title = options.showGameTitle;
+  }
+
+  if (options.showStrikesBar !== undefined) {
+    update.show_strikes_bar = options.showStrikesBar;
+  }
+
+  const { data, error } = await supabase
+    .schema("fued_public")
+    .from("session_state")
+    .update(update)
+    .eq("session_id", sessionId)
+    .select("session_id, show_game_title, show_strikes_bar")
+    .single();
+
+  if (error || !data) {
+    throw new Error(
+      `Failed to update session presentation options: ${error?.message ?? "Unknown error"}`,
+    );
+  }
+
+  return {
+    sessionId: data.session_id,
+    showGameTitle: data.show_game_title ?? true,
+    showStrikesBar: data.show_strikes_bar ?? true,
+  };
+}
+
 export async function endSession(sessionId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -320,13 +364,15 @@ export async function resetSession(sessionId: string) {
       current_screen: "pregame",
       strikes_count: 0,
       sound_enabled: true,
+      show_game_title: true,
+      show_strikes_bar: true,
       score_1: 0,
       score_2: 0,
       updated_at: now,
     })
     .eq("session_id", sessionId)
     .select(
-      "session_id, current_board_id, current_screen, strikes_count, sound_enabled, score_1, score_2",
+      "session_id, current_board_id, current_screen, strikes_count, sound_enabled, show_game_title, show_strikes_bar, score_1, score_2",
     )
     .single();
 
@@ -353,6 +399,8 @@ export async function resetSession(sessionId: string) {
     currentScreen: stateRow.current_screen,
     strikesCount: stateRow.strikes_count,
     soundEnabled: stateRow.sound_enabled,
+    showGameTitle: stateRow.show_game_title ?? true,
+    showStrikesBar: stateRow.show_strikes_bar ?? true,
     score1: stateRow.score_1,
     score2: stateRow.score_2,
   };

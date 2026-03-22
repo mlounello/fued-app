@@ -19,6 +19,8 @@ create table if not exists fued_public.session_state (
   current_screen fued_public.screen_mode not null default 'pregame',
   strikes_count integer not null default 0,
   sound_enabled boolean not null default true,
+  show_game_title boolean not null default true,
+  show_strikes_bar boolean not null default true,
   score_1 integer not null default 0,
   score_2 integer not null default 0,
   updated_at timestamptz not null default now(),

@@ -47,7 +47,15 @@ export function AnswerTile({ answer }: { answer: DisplayAnswer }) {
               : "inset 0 2px 0 rgba(255,255,255,0.18)",
           } as CSSProperties
         }
-      />
+      >
+        {!revealed ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="text-[clamp(1.8rem,min(3.8vw,4.1vh),3.8rem)] font-black leading-none text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.3)]">
+              {answer.displayPosition}
+            </span>
+          </div>
+        ) : null}
+      </div>
       <div
         className="relative flex w-full items-center justify-center"
         style={{
@@ -57,7 +65,7 @@ export function AnswerTile({ answer }: { answer: DisplayAnswer }) {
         }}
       >
         <span className="max-w-[calc(100%-4.25rem)] text-center text-[clamp(1.1rem,min(2.6vw,2.8vh),2.4rem)] font-black leading-[0.92] tracking-tight">
-          {answer.answerText ?? "........"}
+          {answer.answerText ?? ""}
         </span>
         <span
           className="absolute right-[clamp(0.6rem,1vw,1rem)] top-1/2 -translate-y-1/2 text-right text-[clamp(1rem,min(2vw,2.2vh),2rem)] font-black leading-none"

@@ -49,6 +49,8 @@ export interface DisplayPayload {
     currentScreen: ScreenMode;
     strikesCount: number;
     soundEnabled: boolean;
+    showGameTitle: boolean;
+    showStrikesBar: boolean;
     score1: number;
     score2: number;
   };

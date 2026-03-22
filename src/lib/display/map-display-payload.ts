@@ -55,6 +55,8 @@ export function mapDisplayPayloadData(data: any): DisplayPayload {
       currentScreen: data.state.current_screen,
       strikesCount: data.state.strikes_count,
       soundEnabled: data.state.sound_enabled,
+      showGameTitle: data.state.show_game_title ?? true,
+      showStrikesBar: data.state.show_strikes_bar ?? true,
       score1: data.state.score_1,
       score2: data.state.score_2,
     },

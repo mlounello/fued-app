@@ -20,6 +20,23 @@ export async function getDisplayPayloadByToken(
     return null;
   }
 
+  const { data: stateRow, error: stateError } = await supabase
+    .schema("fued_public")
+    .from("session_state")
+    .select("show_game_title, show_strikes_bar")
+    .eq("session_id", data.session.id)
+    .single();
+
+  if (stateError) {
+    throw new Error(`Failed to load display presentation state: ${stateError.message}`);
+  }
+
+  data.state = {
+    ...data.state,
+    show_game_title: stateRow?.show_game_title ?? true,
+    show_strikes_bar: stateRow?.show_strikes_bar ?? true,
+  };
+
   if (data.assets?.logo) {
     data.assets.logo.url = await createSignedAssetUrl(
       data.assets.logo.bucket,
