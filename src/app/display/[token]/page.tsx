@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { DisplayViewportBackground } from "@/components/display/DisplayViewportBackground";
 import { DisplayShell } from "@/components/display/DisplayShell";
 import { SessionRealtimeRefresh } from "@/components/shared/SessionRealtimeRefresh";
 import { resolveDisplayTheme } from "@/lib/utils/display-theme";
@@ -26,8 +25,10 @@ export default async function DisplayPage({
   });
 
   return (
-    <div className="relative min-h-screen w-full">
-      <DisplayViewportBackground backgroundColor={theme.background} />
+    <div
+      className="min-h-screen w-full"
+      style={{ backgroundColor: theme.background }}
+    >
       <SessionRealtimeRefresh sessionId={payload.session.id} />
       <DisplayShell payload={payload} />
     </div>

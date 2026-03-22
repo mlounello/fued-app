@@ -32,13 +32,15 @@ export function DisplayShell({
       className={
         embedded
           ? "min-h-full border p-8"
-          : "min-h-screen w-full border-0 px-10 py-12"
+          : "min-h-screen w-full px-10 py-12"
       }
       style={
         {
-          backgroundColor: theme.background,
+          backgroundColor: embedded ? theme.background : "transparent",
           color: theme.accent,
           borderColor: theme.secondary,
+          borderWidth: embedded ? "1px" : "0",
+          borderStyle: embedded ? "solid" : "none",
           borderRadius: embedded ? "2rem" : "0",
           "--display-background": theme.background,
           "--display-primary": theme.primary,
