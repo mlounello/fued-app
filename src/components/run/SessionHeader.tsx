@@ -1,4 +1,5 @@
-import { launchOrResumeSessionFromOperator } from "@/actions/sessions";
+"use client";
+
 import type { RunScreenData } from "@/types/sessions";
 
 import { DisplayLinkPanel } from "./DisplayLinkPanel";
@@ -6,9 +7,17 @@ import { DisplayLinkPanel } from "./DisplayLinkPanel";
 export function SessionHeader({
   game,
   session,
+  pending,
+  onLaunch,
+  onReset,
+  onToggleSound,
 }: {
   game: RunScreenData["game"];
   session: RunScreenData["session"];
+  pending: boolean;
+  onLaunch: () => void;
+  onReset: () => void;
+  onToggleSound: () => void;
 }) {
   return (
     <div className="rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
@@ -21,14 +30,34 @@ export function SessionHeader({
         </div>
         <div className="flex flex-col items-end gap-3">
           {!session ? (
-            <form action={launchOrResumeSessionFromOperator.bind(null, game.id)}>
+            <button
+              className="rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--accent-foreground)]"
+              onClick={onLaunch}
+              type="button"
+              disabled={pending}
+            >
+              Launch Session
+            </button>
+          ) : null}
+          {session ? (
+            <div className="flex flex-wrap justify-end gap-2">
               <button
-                className="rounded-xl bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--accent-foreground)]"
-                type="submit"
+                className="rounded-xl border border-[color:var(--border)] px-3 py-2 text-sm"
+                onClick={onToggleSound}
+                type="button"
+                disabled={pending}
               >
-                Launch Session
+                {session.soundEnabled ? "Sound On" : "Sound Off"}
               </button>
-            </form>
+              <button
+                className="rounded-xl border border-[color:var(--border)] px-3 py-2 text-sm"
+                onClick={onReset}
+                type="button"
+                disabled={pending}
+              >
+                Reset Session
+              </button>
+            </div>
           ) : null}
           <DisplayLinkPanel token={session?.publicToken ?? null} />
         </div>

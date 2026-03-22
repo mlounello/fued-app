@@ -5,9 +5,16 @@ import { RevealActionButtonGroup } from "./RevealActionButtonGroup";
 export function AnswerRevealPanel({
   boards,
   session,
+  onReveal,
 }: {
   boards: RunBoard[];
   session: SessionSummary | null;
+  onReveal: (result: {
+    answerId: string;
+    revealedForTeam: "team_1" | "team_2" | "none" | null;
+    score1: number;
+    score2: number;
+  }) => void;
 }) {
   const currentBoard = boards.find((board) => board.id === session?.currentBoardId) ?? boards[0];
 
@@ -43,6 +50,7 @@ export function AnswerRevealPanel({
                 <RevealActionButtonGroup
                   sessionId={session.sessionId}
                   answerId={answer.id}
+                  onReveal={onReveal}
                 />
               )}
             </div>

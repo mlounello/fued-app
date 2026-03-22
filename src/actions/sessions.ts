@@ -6,6 +6,10 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { ScoringTarget, ScreenMode } from "@/types/sessions";
 
+function normalizeRpcRow<T>(data: T | T[] | null) {
+  return Array.isArray(data) ? (data[0] ?? null) : data;
+}
+
 export async function launchOrResumeSession(gameId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -18,7 +22,23 @@ export async function launchOrResumeSession(gameId: string) {
     throw new Error(`Failed to launch or resume session: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to launch or resume session: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    publicToken: row.public_token,
+    sessionStatus: row.session_status,
+    currentBoardId: row.current_board_id,
+    currentScreen: row.current_screen,
+    strikesCount: row.strikes_count,
+    soundEnabled: row.sound_enabled,
+    score1: row.score_1,
+    score2: row.score_2,
+  };
 }
 
 export async function launchOrResumeSessionFromOperator(gameId: string) {
@@ -41,7 +61,20 @@ export async function changeSessionBoard(sessionId: string, boardId: string) {
     throw new Error(`Failed to change board: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to change board: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    currentBoardId: row.current_board_id,
+    currentScreen: row.current_screen,
+    strikesCount: row.strikes_count,
+    score1: row.score_1,
+    score2: row.score_2,
+  };
 }
 
 export async function setSessionScreen(sessionId: string, screen: ScreenMode) {
@@ -57,7 +90,21 @@ export async function setSessionScreen(sessionId: string, screen: ScreenMode) {
     throw new Error(`Failed to set screen: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to set screen: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    currentBoardId: row.current_board_id,
+    currentScreen: row.current_screen,
+    strikesCount: row.strikes_count,
+    soundEnabled: row.sound_enabled,
+    score1: row.score_1,
+    score2: row.score_2,
+  };
 }
 
 export async function revealAnswer(
@@ -78,7 +125,20 @@ export async function revealAnswer(
     throw new Error(`Failed to reveal answer: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to reveal answer: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    answerId: row.answer_id,
+    isRevealed: row.is_revealed,
+    revealedForTeam: row.revealed_for_team,
+    score1: row.score_1,
+    score2: row.score_2,
+  };
 }
 
 export async function setScore(sessionId: string, team: 1 | 2, value: number) {
@@ -95,7 +155,17 @@ export async function setScore(sessionId: string, team: 1 | 2, value: number) {
     throw new Error(`Failed to set score: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to set score: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    score1: row.score_1,
+    score2: row.score_2,
+  };
 }
 
 export async function addStrike(sessionId: string) {
@@ -110,7 +180,16 @@ export async function addStrike(sessionId: string) {
     throw new Error(`Failed to add strike: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to add strike: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    strikesCount: row.strikes_count,
+  };
 }
 
 export async function removeStrike(sessionId: string) {
@@ -125,7 +204,16 @@ export async function removeStrike(sessionId: string) {
     throw new Error(`Failed to remove strike: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to remove strike: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    strikesCount: row.strikes_count,
+  };
 }
 
 export async function toggleSound(sessionId: string, enabled: boolean) {
@@ -141,7 +229,16 @@ export async function toggleSound(sessionId: string, enabled: boolean) {
     throw new Error(`Failed to toggle sound: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to toggle sound: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    soundEnabled: row.sound_enabled,
+  };
 }
 
 export async function endSession(sessionId: string) {
@@ -156,5 +253,107 @@ export async function endSession(sessionId: string) {
     throw new Error(`Failed to end session: ${error.message}`);
   }
 
-  return data;
+  const row = normalizeRpcRow(data);
+
+  if (!row) {
+    throw new Error("Failed to end session: empty result");
+  }
+
+  return {
+    sessionId: row.session_id,
+    sessionStatus: row.session_status,
+    endedAt: row.ended_at,
+  };
+}
+
+export async function resetSession(sessionId: string) {
+  const supabase = await createClient();
+
+  const { data: sessionRow, error: sessionError } = await supabase
+    .schema("fued_public")
+    .from("game_sessions")
+    .select("id, game_id")
+    .eq("id", sessionId)
+    .single();
+
+  if (sessionError || !sessionRow) {
+    throw new Error(`Failed to load session for reset: ${sessionError?.message ?? "Not found"}`);
+  }
+
+  const { data: firstBoard, error: boardError } = await supabase
+    .schema("fued_public")
+    .from("game_boards")
+    .select("id")
+    .eq("game_id", sessionRow.game_id)
+    .is("deleted_at", null)
+    .order("sort_order", { ascending: true })
+    .limit(1)
+    .single();
+
+  if (boardError || !firstBoard) {
+    throw new Error(`Failed to load first board for reset: ${boardError?.message ?? "Not found"}`);
+  }
+
+  const now = new Date().toISOString();
+
+  const { error: answersError } = await supabase
+    .schema("fued_public")
+    .from("session_board_answers")
+    .update({
+      is_revealed: false,
+      revealed_at: null,
+      revealed_by_user_id: null,
+      revealed_for_team: null,
+      updated_at: now,
+    })
+    .eq("session_id", sessionId);
+
+  if (answersError) {
+    throw new Error(`Failed to reset answers: ${answersError.message}`);
+  }
+
+  const { data: stateRow, error: stateError } = await supabase
+    .schema("fued_public")
+    .from("session_state")
+    .update({
+      current_board_id: firstBoard.id,
+      current_screen: "pregame",
+      strikes_count: 0,
+      sound_enabled: true,
+      score_1: 0,
+      score_2: 0,
+      updated_at: now,
+    })
+    .eq("session_id", sessionId)
+    .select(
+      "session_id, current_board_id, current_screen, strikes_count, sound_enabled, score_1, score_2",
+    )
+    .single();
+
+  if (stateError || !stateRow) {
+    throw new Error(`Failed to reset session state: ${stateError?.message ?? "Unknown error"}`);
+  }
+
+  const { error: touchError } = await supabase
+    .schema("fued_public")
+    .from("game_sessions")
+    .update({
+      last_activity_at: now,
+      updated_at: now,
+    })
+    .eq("id", sessionId);
+
+  if (touchError) {
+    throw new Error(`Failed to update session activity: ${touchError.message}`);
+  }
+
+  return {
+    sessionId: stateRow.session_id,
+    currentBoardId: stateRow.current_board_id,
+    currentScreen: stateRow.current_screen,
+    strikesCount: stateRow.strikes_count,
+    soundEnabled: stateRow.sound_enabled,
+    score1: stateRow.score_1,
+    score2: stateRow.score_2,
+  };
 }

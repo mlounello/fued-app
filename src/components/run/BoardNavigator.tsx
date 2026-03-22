@@ -9,9 +9,11 @@ import type { RunBoard, SessionSummary } from "@/types/sessions";
 export function BoardNavigator({
   boards,
   session,
+  onSessionChange,
 }: {
   boards: RunBoard[];
   session: SessionSummary | null;
+  onSessionChange: (patch: Partial<SessionSummary>) => void;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -22,7 +24,14 @@ export function BoardNavigator({
     }
 
     startTransition(async () => {
-      await changeSessionBoard(session.sessionId, boardId);
+      const result = await changeSessionBoard(session.sessionId, boardId);
+      onSessionChange({
+        currentBoardId: result.currentBoardId,
+        currentScreen: result.currentScreen,
+        strikesCount: result.strikesCount,
+        score1: result.score1,
+        score2: result.score2,
+      });
       router.refresh();
     });
   };

@@ -8,8 +8,10 @@ import type { SessionSummary } from "@/types/sessions";
 
 export function StrikeControlPanel({
   session,
+  onSessionChange,
 }: {
   session: SessionSummary | null;
+  onSessionChange: (patch: Partial<SessionSummary>) => void;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -20,11 +22,15 @@ export function StrikeControlPanel({
     }
 
     startTransition(async () => {
+      let result;
       if (direction === "add") {
-        await addStrike(session.sessionId);
+        result = await addStrike(session.sessionId);
       } else {
-        await removeStrike(session.sessionId);
+        result = await removeStrike(session.sessionId);
       }
+      onSessionChange({
+        strikesCount: result.strikesCount,
+      });
       router.refresh();
     });
   };

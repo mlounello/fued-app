@@ -4,14 +4,16 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { setScore } from "@/actions/sessions";
-import type { RunScreenData } from "@/types/sessions";
+import type { RunScreenData, SessionSummary } from "@/types/sessions";
 
 export function ScoreControlPanel({
   game,
   session,
+  onSessionChange,
 }: {
   game: RunScreenData["game"];
   session: RunScreenData["session"];
+  onSessionChange: (patch: Partial<SessionSummary>) => void;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -22,7 +24,11 @@ export function ScoreControlPanel({
     }
 
     startTransition(async () => {
-      await setScore(session.sessionId, team, Math.max(0, nextValue));
+      const result = await setScore(session.sessionId, team, Math.max(0, nextValue));
+      onSessionChange({
+        score1: result.score1,
+        score2: result.score2,
+      });
       router.refresh();
     });
   };

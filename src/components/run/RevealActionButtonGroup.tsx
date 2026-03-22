@@ -8,16 +8,24 @@ import { revealAnswer } from "@/actions/sessions";
 export function RevealActionButtonGroup({
   sessionId,
   answerId,
+  onReveal,
 }: {
   sessionId: string;
   answerId: string;
+  onReveal?: (result: {
+    answerId: string;
+    revealedForTeam: "team_1" | "team_2" | "none" | null;
+    score1: number;
+    score2: number;
+  }) => void;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const reveal = (target: "team_1" | "team_2" | "none") => {
     startTransition(async () => {
-      await revealAnswer(sessionId, answerId, target);
+      const result = await revealAnswer(sessionId, answerId, target);
+      onReveal?.(result);
       router.refresh();
     });
   };

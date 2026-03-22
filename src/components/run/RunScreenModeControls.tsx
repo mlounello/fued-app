@@ -15,8 +15,10 @@ const SCREEN_OPTIONS: Array<{ label: string; value: ScreenMode }> = [
 
 export function RunScreenModeControls({
   session,
+  onSessionChange,
 }: {
   session: SessionSummary | null;
+  onSessionChange: (patch: Partial<SessionSummary>) => void;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -27,7 +29,15 @@ export function RunScreenModeControls({
     }
 
     startTransition(async () => {
-      await setSessionScreen(session.sessionId, screen);
+      const result = await setSessionScreen(session.sessionId, screen);
+      onSessionChange({
+        currentBoardId: result.currentBoardId,
+        currentScreen: result.currentScreen,
+        strikesCount: result.strikesCount,
+        soundEnabled: result.soundEnabled,
+        score1: result.score1,
+        score2: result.score2,
+      });
       router.refresh();
     });
   };
